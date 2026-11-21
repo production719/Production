@@ -131,9 +131,48 @@
   .btn-danger:hover{background:#9f5a3a}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;opacity:0;transition:.25s;font-size:14px;z-index:30;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .dim{color:#c3bba6}
+  td.by{color:var(--muted);font-size:13px}
+  #todayBtn.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .hright .status{margin-left:0}
+  .user{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 4px}
+  .user img,.user .av{width:30px;height:30px;border-radius:50%;object-fit:cover}
+  .user .av{display:grid;place-items:center;background:var(--leaf-l);color:var(--leaf-d);font-weight:600;font-family:"Mitr"}
+  .user .nm{display:flex;flex-direction:column;line-height:1.2;max-width:200px}
+  .user .nm b{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .user .nm small{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .user button{font:inherit;font-size:12.5px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:5px 10px;cursor:pointer}
+  .user button:hover{background:var(--clay-l);color:var(--clay);border-color:#e5bfa9}
+  @media (max-width:640px){.user .nm{display:none}}
+  .login{min-height:100vh;display:grid;place-items:center;padding:24px}
+  .lcard{background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:0 2px 4px rgba(60,55,40,.05),0 18px 50px rgba(60,55,40,.10);padding:36px 32px 28px;max-width:400px;width:100%;text-align:center}
+  .lcard .logo{width:64px;height:64px;border-radius:20px;margin:0 auto 16px}
+  .lcard h1{font-size:24px;color:var(--leaf-d)}
+  .lcard p{color:var(--muted);margin:6px 0 24px;font-size:14.5px}
+  .gbtn{font:inherit;font-weight:500;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:12px;padding:12px 16px;cursor:pointer;transition:background .15s,box-shadow .15s}
+  .gbtn:hover{background:#f8faf5;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .lmsg{min-height:22px;margin-top:14px;font-size:13.5px;color:var(--muted)}
+  .lmsg.err{color:var(--clay)}
+  .lfoot{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted)}
+  .lsteps{display:flex;justify-content:center;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+  .lsteps span{font-size:12px;background:var(--leaf-l);color:var(--leaf-d);border-radius:999px;padding:2px 10px}
 </style>
 </head>
 <body>
+<section class="login" id="login">
+  <div class="lcard">
+    <div class="logo"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19 13 11"/></svg></div>
+    <h1>บันทึกข้อมูลผลิต</h1>
+    <p>Foodle Noodle · ระบบบันทึกข้อมูลการผลิตรายวัน</p>
+    <div class="lsteps"><span>นึ่ง</span><span>รีด</span><span>ตัด</span><span>แพ็ค</span></div>
+    <button class="gbtn" id="loginBtn" type="button"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg> เข้าสู่ระบบด้วย Google</button>
+    <button class="gbtn" id="loginSwitch" type="button" style="display:none"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg> เปลี่ยนบัญชี Google</button>
+    <div class="lmsg" id="loginMsg">กำลังตรวจสอบการเข้าสู่ระบบ…</div>
+    <div class="lfoot">ใช้ได้เฉพาะบัญชีที่ได้รับอนุญาต · <span id="loginVer"></span></div>
+  </div>
+</section>
+<div id="app" style="display:none">
 <div class="wrap">
   <header>
     <div class="logo">
@@ -141,14 +180,14 @@
     </div>
     <div>
       <h1>บันทึกข้อมูลผลิต <button class="ver" id="verBtn" type="button" title="ดูประวัติเวอร์ชัน"></button></h1>
-      <p>ไลน์นึ่ง → รีด → ตัด → แพ็ค · บันทึกรายวัน ใช้ร่วมกันทั้งทีม</p>
+      <p>ไลน์นึ่ง → รีด → ตัด → แพ็ค · Foodle Noodle</p>
     </div>
-    <div class="status"><span class="dot" id="dot"></span><span id="statusText">กำลังเชื่อมต่อ…</span></div>
+    <div class="hright">
+      <div class="status"><span class="dot" id="dot"></span><span id="statusText">กำลังเชื่อมต่อ…</span></div>
+      <div class="user"><img id="avatar" alt="" referrerpolicy="no-referrer" style="display:none"><span class="av" id="avatarTxt">?</span><span class="nm"><b id="userName"></b><small id="userEmail"></small></span><button id="logoutBtn" type="button">ออกจากระบบ</button></div>
+    </div>
   </header>
 
-  <div id="localNote" style="display:none;background:#fff6dc;border:1px solid #ecd9a6;color:#7a6330;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px">
-    ยังไม่ได้ตั้งค่า Google Sheets — ข้อมูลจะเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น เครื่องอื่นจะมองไม่เห็น (ตั้งค่า API_URL ตามไฟล์ README)
-  </div>
   <div id="errNote" style="display:none;background:#f6e3d8;border:1px solid #e5bfa9;color:#8a4a2c;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px"></div>
   <nav class="flow" id="flow"></nav>
 
@@ -189,6 +228,7 @@
             <label for="to">ถึงวันที่</label>
             <input type="date" id="to">
           </div>
+          <button class="btn btn-ghost" id="todayBtn" type="button">วันนี้</button>
           <button class="btn btn-ghost" id="clearFilter" type="button">ล้างตัวกรอง</button>
         </div>
         <div class="tablewrap">
@@ -218,6 +258,7 @@
     <span><button class="linkbtn" id="footLog" type="button">ดูประวัติเวอร์ชัน</button> · <a href="https://github.com/production719/Production" target="_blank" rel="noopener">GitHub</a></span>
   </footer>
 </div>
+</div>
 
 <div class="modal" id="modal">
   <div class="box">
@@ -238,63 +279,64 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ============================================================
-   ตั้งค่า: วาง URL ของ Google Apps Script Web App ที่นี่
-   (ดูวิธีตั้งค่าในไฟล์ README.md)
-   ถ้าเว้นว่าง ข้อมูลจะเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น
+   ตั้งค่า Supabase (Publishable key ใส่ในหน้าเว็บได้ — สิทธิ์ข้อมูลคุมด้วย RLS)
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbzNQ3IDiX7J2dmOrtX5Gc49hiyuKzGqusQggi--iAuAqYk4v2OJe-WelTJo8cCXlI4/exec";
-const REFRESH_SECONDS = 30;
+const SUPABASE_URL = "https://ahneciasihtkicmeielx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_VpiqzfFzmfZjw0uUd9u8-A_JmyTpJnn";
+const LOGIN_HINT   = "production@foodlenoodle.com";
 
 (function(){
-  const VERSION = "v2.3";
+  const VERSION = "v3.0";
   const CHANGELOG = [
-    {v:"v2.3", d:"21/11/2026", items:["แสดงสาเหตุเมื่อเชื่อมต่อ Google Sheets ไม่ได้","Code.gs ระบุชีตด้วย ID โดยตรง และเพิ่มการตรวจสอบ ?check=1"]},
-    {v:"v2.2", d:"21/11/2026", items:["เชื่อมต่อ Google Sheets “บันทึกข้อมูลผลิต” แล้ว — ข้อมูลทุกไลน์ใช้ร่วมกันได้ทุกเครื่อง"]},
-    {v:"v2.1", d:"21/11/2026", items:["แสดงเวอร์ชันชัดเจนขึ้น: ป้ายเวอร์ชันที่หัวเว็บ และแถบเวอร์ชัน/วันที่อัปเดตท้ายหน้า","เผยแพร่บน GitHub Pages"]},
-    {v:"v2.0", d:"21/11/2026", items:["เพิ่มไลน์นึ่ง ไลน์รีด และไลน์ตัด","เรียงแท็บตามขั้นตอนผลิต: นึ่ง → รีด → ตัด → แพ็ค","เพิ่มช่องหมายเหตุในทุกไลน์","แสดงเลขเวอร์ชันและประวัติการปรับปรุง","รุ่นสำหรับติดตั้งบนเซิร์ฟเวอร์เอง: เก็บข้อมูลลง Google Sheets"]},
+    {v:"v3.0", d:"21/11/2026", items:["ย้ายฐานข้อมูลไป Supabase","ล็อกอินด้วยบัญชี Google (เฉพาะอีเมลที่ได้รับอนุญาต)","อัปเดตข้อมูลทันทีเมื่อมีคนบันทึก (Realtime)","แสดงผู้บันทึกในทุกรายการ","ปุ่มกรองเฉพาะวันนี้"]},
+    {v:"v2.3", d:"21/11/2026", items:["แสดงสาเหตุเมื่อเชื่อมต่อ Google Sheets ไม่ได้"]},
+    {v:"v2.2", d:"21/11/2026", items:["เชื่อมต่อ Google Sheets"]},
+    {v:"v2.1", d:"21/11/2026", items:["แสดงเวอร์ชันชัดเจนขึ้น","เผยแพร่บน GitHub Pages"]},
+    {v:"v2.0", d:"21/11/2026", items:["เพิ่มไลน์นึ่ง ไลน์รีด และไลน์ตัด","เรียงแท็บตามขั้นตอนผลิต: นึ่ง → รีด → ตัด → แพ็ค","เพิ่มช่องหมายเหตุในทุกไลน์"]},
     {v:"v1.1", d:"14/11/2026", items:["ตั้งชื่อหน้าเป็นไลน์แพ็ค"]},
-    {v:"v1.0", d:"14/11/2026", items:["เปิดใช้งานบันทึกข้อมูลไลน์แพ็ค พร้อมค้นหา กรองวันที่ สรุปยอด และคัดลอกไป Excel/Sheets"]}
+    {v:"v1.0", d:"14/11/2026", items:["เปิดใช้งานบันทึกข้อมูลไลน์แพ็ค"]}
   ];
 
   const F = {
-    date:{label:"วันที่",type:"date",req:true},
-    customer:{label:"ลูกค้า",type:"text",req:true,list:"dl_customer",ph:"ชื่อลูกค้า",search:true},
-    po:{label:"PO",type:"text",ph:"เลขที่ PO",search:true},
-    noodleType:{label:"ชนิดเส้นและขนาด",type:"text",req:true,list:"dl_noodleType",ph:"เช่น เส้นเล็ก 200 g",search:true},
-    note:{label:"หมายเหตุ",type:"textarea",ph:"รายละเอียดเพิ่มเติม เช่น เครื่องขัดข้อง เปลี่ยนล็อต ฯลฯ",search:true}
+    date:{label:"วันที่",type:"date",req:true,col:"prod_date"},
+    customer:{label:"ลูกค้า",type:"text",req:true,list:"dl_customer",ph:"ชื่อลูกค้า",search:true,col:"customer"},
+    po:{label:"PO",type:"text",ph:"เลขที่ PO",search:true,col:"po"},
+    noodleType:{label:"ชนิดเส้นและขนาด",type:"text",req:true,list:"dl_noodleType",ph:"เช่น เส้นเล็ก 200 g",search:true,col:"noodle_type"},
+    note:{label:"หมายเหตุ",type:"textarea",ph:"รายละเอียดเพิ่มเติม เช่น เครื่องขัดข้อง เปลี่ยนล็อต ฯลฯ",search:true,col:"note"}
   };
   const LINES = [
-    { key:"steam", name:"ไลน์นึ่ง", sheet:"ไลน์นึ่ง",
+    { key:"steam", name:"ไลน์นึ่ง", table:"prod_steam",
       fields:["date","customer","po",
-        {k:"plan",label:"แผนผลิต",type:"number",step:"any",rowStart:true},
-        {k:"planDone",label:"แผนผลิตได้",type:"number",step:"any"},
-        {k:"riceLot",label:"Lot ข้าวที่ใช้",type:"text",list:"dl_riceLot",ph:"เลข Lot",search:true,group:"rice"},
-        {k:"riceKg",label:"น้ำหนักข้าวที่ใช้",type:"number",step:"0.01",unit:"กก.",group:"rice"},
+        {k:"plan",col:"plan",label:"แผนผลิต",type:"number",step:"any",rowStart:true},
+        {k:"planDone",col:"plan_done",label:"แผนผลิตได้",type:"number",step:"any"},
+        {k:"riceLot",col:"rice_lot",label:"Lot ข้าวที่ใช้",type:"text",list:"dl_riceLot",ph:"เลข Lot",search:true,group:"rice"},
+        {k:"riceKg",col:"rice_kg",label:"น้ำหนักข้าวที่ใช้",type:"number",step:"0.01",unit:"กก.",group:"rice"},
         "noodleType","note"],
       stats:[{k:"plan",label:"แผนผลิต"},{k:"planDone",label:"แผนผลิตได้"},{k:"riceKg",label:"ข้าวที่ใช้",unit:"กก."}]
     },
-    { key:"press", name:"ไลน์รีด", sheet:"ไลน์รีด",
+    { key:"press", name:"ไลน์รีด", table:"prod_press",
       fields:["date","customer","po",
-        {k:"plan",label:"แผนผลิต",type:"number",step:"any"},
-        {k:"carts",label:"จำนวนรถตากเส้น",type:"number",step:"1",unit:"คัน",req:true},
+        {k:"plan",col:"plan",label:"แผนผลิต",type:"number",step:"any"},
+        {k:"carts",col:"carts",label:"จำนวนรถตากเส้น",type:"number",step:"1",unit:"คัน",req:true},
         "noodleType","note"],
       stats:[{k:"plan",label:"แผนผลิต"},{k:"carts",label:"รถตากเส้น",unit:"คัน"}]
     },
-    { key:"cut", name:"ไลน์ตัด", sheet:"ไลน์ตัด",
+    { key:"cut", name:"ไลน์ตัด", table:"prod_cut",
       fields:["date","customer","po","noodleType",
-        {k:"outKg",label:"น้ำหนักเส้นที่ได้",type:"number",step:"0.01",unit:"กก.",req:true},
+        {k:"outKg",col:"out_kg",label:"น้ำหนักเส้นที่ได้",type:"number",step:"0.01",unit:"กก.",req:true},
         "note"],
       stats:[{k:"outKg",label:"น้ำหนักเส้นที่ได้",unit:"กก."}]
     },
-    { key:"pack", name:"ไลน์แพ็ค", sheet:"ไลน์แพ็ค",
+    { key:"pack", name:"ไลน์แพ็ค", table:"prod_pack",
       fields:["date","customer","po",
-        {k:"ink",label:"รูปแบบการ INK",type:"text",list:"dl_ink",ph:"เช่น วันผลิต/หมดอายุ",search:true,chip:true},
-        {k:"packed",label:"จำนวนซองที่แพ็คได้",type:"number",step:"1",unit:"ซอง",req:true},
+        {k:"ink",col:"ink",label:"รูปแบบการ INK",type:"text",list:"dl_ink",ph:"เช่น วันผลิต/หมดอายุ",search:true,chip:true},
+        {k:"packed",col:"packed",label:"จำนวนซองที่แพ็คได้",type:"number",step:"1",unit:"ซอง",req:true},
         "noodleType",
-        {k:"wasteKg",label:"น้ำหนักเส้นเสีย",type:"number",step:"0.01",unit:"กก.",group:"waste",bad:true},
-        {k:"wastePacks",label:"จำนวนซองเสีย",type:"number",step:"1",unit:"ซอง",group:"waste",bad:true},
+        {k:"wasteKg",col:"waste_kg",label:"น้ำหนักเส้นเสีย",type:"number",step:"0.01",unit:"กก.",group:"waste",bad:true},
+        {k:"wastePacks",col:"waste_packs",label:"จำนวนซองเสีย",type:"number",step:"1",unit:"ซอง",group:"waste",bad:true},
         "note"],
       stats:[{k:"packed",label:"ซองที่แพ็คได้",unit:"ซอง"},{k:"wastePacks",label:"ซองเสีย",unit:"ซอง",warn:true},{k:"wasteKg",label:"น้ำหนักเส้นเสีย",unit:"กก.",warn:true}]
     }
@@ -312,71 +354,72 @@ const REFRESH_SECONDS = 30;
   const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const num = v => { const n=parseFloat(v); return isFinite(n)?n:0; };
   const isNum = f => f.type==="number";
-  const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  const shortName = e => e ? String(e).split("@")[0] : "-";
 
-  /* ---------------- storage adapters ---------------- */
-  // Google Sheets via Apps Script: one tab per line, row 1 = headers [id, ประทับเวลา, ...labels]
-  function sheetStore(url){
-    const headers = L => ["id","ประทับเวลา"].concat(L.fields.map(f=>f.label));
-    const types = L => ["text","timestamp"].concat(L.fields.map(f=>f.type==="number"?"number":f.type==="date"?"date":"text"));
-    const toRow = (L,id,r) => [id, r.ts].concat(L.fields.map(f=> r[f.k]==null ? "" : r[f.k]));
-    async function post(body){
-      let res, txt, j;
-      try{ res = await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}); }
-      catch(e){ throw new Error("เรียก Apps Script ไม่ได้ (ตรวจว่า Deploy ตั้ง Who has access = Anyone)"); }
-      txt = await res.text();
-      try{ j = JSON.parse(txt); }
-      catch(e){ throw new Error("Apps Script ไม่ได้ตอบเป็น JSON (HTTP "+res.status+") — ตรวจสิทธิ์ Anyone และ Deploy เวอร์ชันใหม่"); }
-      if(!j.ok) throw new Error("Apps Script: "+(j.error||"error"));
-      return j;
-    }
-    return {
-      mode:"sheets",
-      async list(L){
-        const j = await post({action:"list",sheet:L.sheet,headers:headers(L),types:types(L)});
-        return (j.rows||[]).map(row=>{
-          const o={id:String(row[0]), ts:Number(row[1])||0};
-          L.fields.forEach((f,i)=>{ let v=row[i+2]; if(v===""||v==null) v=isNum(f)?null:""; else if(isNum(f)) v=num(v); else v=String(v); o[f.k]=v; });
-          return o;
-        }).sort((a,b)=>b.ts-a.ts);
-      },
-      async add(L,r){ const id=uid(); await post({action:"add",sheet:L.sheet,headers:headers(L),types:types(L),row:toRow(L,id,r)}); },
-      async update(L,id,r){ await post({action:"update",sheet:L.sheet,headers:headers(L),types:types(L),id,row:toRow(L,id,r)}); },
-      async remove(L,id){ await post({action:"delete",sheet:L.sheet,id}); }
-    };
-  }
-  // Browser-only fallback
-  function localStore(){
-    const key = L => "prodlog_"+L.key;
-    const read = L => { try{ return JSON.parse(localStorage.getItem(key(L))||"[]"); }catch(_){ return []; } };
-    const write = (L,a) => localStorage.setItem(key(L),JSON.stringify(a));
-    return {
-      mode:"local",
-      async list(L){ return read(L).sort((a,b)=>b.ts-a.ts); },
-      async add(L,r){ const a=read(L); a.push(Object.assign({id:uid()},r)); write(L,a); },
-      async update(L,id,r){ write(L, read(L).map(x=>x.id===id?Object.assign({id},r):x)); },
-      async remove(L,id){ write(L, read(L).filter(x=>x.id!==id)); }
-    };
-  }
-  const store = API_URL ? sheetStore(API_URL) : localStore();
-
-  let editingId=null, pendingDelete=null, cur=LINES[0], loaded=false;
+  let sb=null, user=null, role=null, editingId=null, pendingDelete=null, cur=LINES[0], loaded=false, channel=null, started=false;
   const data = {}; LINES.forEach(L=>data[L.key]=[]);
 
   function setStatus(state,text){ $("dot").className="dot "+(state||""); $("statusText").textContent=text; }
   function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("show"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("show"),2400); }
   function msg(t,cls){ const m=$("msg"); m.textContent=t||""; m.className="msg "+(cls||""); }
+  function showErr(m){ $("errNote").textContent=m; $("errNote").style.display=m?"":"none"; }
+  const canWrite = () => role==="editor";
 
-  if(store.mode==="local") $("localNote").style.display="";
-
+  /* ---------------- version ---------------- */
   $("verBtn").innerHTML = '<i></i>เวอร์ชัน '+VERSION.replace(/^v/,"");
+  $("loginVer").textContent = "เวอร์ชัน "+VERSION.replace(/^v/,"");
   $("footVer").textContent = VERSION.replace(/^v/,"");
   $("footDate").textContent = CHANGELOG[0].d;
   $("verNow").textContent = VERSION;
-  $("footLog").onclick=()=>$("verModal").classList.add("show");
-  $("verLog").innerHTML = CHANGELOG.map((c,i)=>'<li><b>'+c.v+'</b>'+(i?'':'<span class="vlatest">ล่าสุด</span>')+'<span>'+c.d+'</span><ul>'+c.items.map(i=>'<li>'+esc(i)+'</li>').join("")+'</ul></li>').join("");
-  $("verBtn").onclick=()=>$("verModal").classList.add("show");
+  $("verLog").innerHTML = CHANGELOG.map((c,i)=>'<li><b>'+c.v+'</b>'+(i?'':'<span class="vlatest">ล่าสุด</span>')+'<span>'+c.d+'</span><ul>'+c.items.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></li>').join("");
+  const openLog=()=>$("verModal").classList.add("show");
+  $("verBtn").onclick=openLog; $("footLog").onclick=openLog;
   $("verClose").onclick=()=>$("verModal").classList.remove("show");
+
+  /* ---------------- data layer (Supabase) ---------------- */
+  function fromRow(L,row){
+    const o={id:row.id, ts:Date.parse(row.created_at)||0, by:row.created_by_email||"", upd:row.updated_by_email||""};
+    L.fields.forEach(f=>{ let v=row[f.col]; if(v==null) v=isNum(f)?null:""; else if(isNum(f)) v=num(v); o[f.k]=v; });
+    return o;
+  }
+  function toRow(L,o){
+    const r={};
+    L.fields.forEach(f=>{ let v=o[f.k]; if(isNum(f)) r[f.col]=(v===""||v==null)?null:num(v); else r[f.col]=(v===""?null:v); });
+    return r;
+  }
+  function errText(e){
+    const m=(e&&(e.message||e.error_description))||"ไม่ทราบสาเหตุ";
+    if(/row-level security|permission denied/i.test(m)) return "บัญชีนี้ไม่มีสิทธิ์บันทึกหรือแก้ไขข้อมูล";
+    if(/Failed to fetch|NetworkError/i.test(m)) return "เชื่อมต่ออินเทอร์เน็ตไม่ได้";
+    return m;
+  }
+  async function refresh(L){
+    const {data:rows,error}=await sb.from(L.table).select("*").order("prod_date",{ascending:false}).order("created_at",{ascending:false}).limit(2000);
+    if(error) throw error;
+    data[L.key]=rows.map(r=>fromRow(L,r));
+    fillLists(); renderTabs(); if(L===cur) render();
+  }
+  async function refreshAll(){
+    try{
+      await Promise.all(LINES.map(refresh));
+      loaded=true; render(); showErr("");
+      setStatus("ok","ซิงค์แล้ว · "+fmtTs(Date.now()).slice(11,16));
+    }catch(e){
+      setStatus("err","โหลดข้อมูลไม่ได้"); showErr("สาเหตุ: "+errText(e));
+    }
+  }
+  function subscribe(){
+    if(channel) return;
+    const timers={};
+    channel=sb.channel("prod-log");
+    LINES.forEach(L=>{
+      channel.on("postgres_changes",{event:"*",schema:"public",table:L.table},()=>{
+        clearTimeout(timers[L.key]);
+        timers[L.key]=setTimeout(()=>refresh(L).then(()=>setStatus("ok","อัปเดตล่าสุด "+fmtTs(Date.now()).slice(11,16))).catch(()=>{}),300);
+      });
+    });
+    channel.subscribe(st=>{ if(st==="SUBSCRIBED") setStatus("ok","ออนไลน์ · อัปเดตอัตโนมัติ"); });
+  }
 
   /* ---------------- tabs ---------------- */
   function renderTabs(){
@@ -387,9 +430,10 @@ const REFRESH_SECONDS = 30;
   }
   $("flow").addEventListener("click",e=>{ const b=e.target.closest(".tab"); if(b) switchLine(b.dataset.k,true); });
   function switchLine(k,push){
-    const L=LINES.find(x=>x.key===k)||LINES[0];
-    if(L!==cur){ cur=L; editingId=null; }
-    if(push){ try{ history.replaceState(null,"","#"+L.key); }catch(_){ location.hash=L.key; } }
+    const L=LINES.find(x=>x.key===k); if(!L && !push) return;
+    const N=L||LINES[0];
+    if(N!==cur){ cur=N; editingId=null; }
+    if(push){ try{ history.replaceState(null,"","#"+N.key); }catch(_){ location.hash=N.key; } }
     msg(""); buildForm(); renderTabs(); renderHead(); render();
   }
   window.addEventListener("hashchange",()=>switchLine(location.hash.slice(1),false));
@@ -428,9 +472,11 @@ const REFRESH_SECONDS = 30;
   function setFormMode(){
     const ed=!!editingId;
     $("formTitle").querySelector("span").textContent=(ed?"แก้ไขรายการ · ":"เพิ่มรายการ · ")+cur.name;
-    $("formSub").textContent=ed?"แก้ไขข้อมูลแล้วกดบันทึกการแก้ไข":"กรอกข้อมูลแล้วกดบันทึก — ประทับเวลาจะใส่ให้อัตโนมัติ";
+    $("formSub").textContent=ed?"แก้ไขข้อมูลแล้วกดบันทึกการแก้ไข":"กรอกข้อมูลแล้วกดบันทึก — ประทับเวลาและชื่อผู้บันทึกจะใส่ให้อัตโนมัติ";
     $("saveBtn").textContent=ed?"บันทึกการแก้ไข":"บันทึกข้อมูล "+cur.name;
     $("cancelBtn").style.display=ed?"":"none";
+    $("saveBtn").disabled=!canWrite();
+    if(!canWrite()) msg("บัญชีนี้ดูข้อมูลได้อย่างเดียว");
   }
   function readForm(){
     const o={};
@@ -457,6 +503,7 @@ const REFRESH_SECONDS = 30;
 
   $("form").addEventListener("submit", async e=>{
     e.preventDefault();
+    if(!canWrite()){ msg("บัญชีนี้ไม่มีสิทธิ์บันทึกข้อมูล","err"); return; }
     const o=readForm();
     const miss=cur.fields.filter(f=>f.req && (o[f.k]===""||o[f.k]==null));
     if(miss.length){ msg("กรุณากรอก: "+miss.map(f=>f.label).join(", "),"err"); $("f_"+miss[0].k).focus(); return; }
@@ -464,26 +511,27 @@ const REFRESH_SECONDS = 30;
     const L=cur;
     try{
       if(editingId){
-        const old=data[L.key].find(x=>x.id===editingId)||{};
-        await store.update(L,editingId,Object.assign({},o,{ts:old.ts||Date.now()}));
+        const {error}=await sb.from(L.table).update(toRow(L,o)).eq("id",editingId);
+        if(error) throw error;
         msg(""); toast("บันทึกการแก้ไขแล้ว"); await refresh(L); resetForm();
       } else {
-        await store.add(L,Object.assign({},o,{ts:Date.now()}));
+        const {error}=await sb.from(L.table).insert(toRow(L,o));
+        if(error) throw error;
         msg(""); toast("บันทึกข้อมูล"+L.name+"เรียบร้อย"); await refresh(L); resetForm(true);
         $("f_customer").focus();
       }
     }catch(err){
-      msg("บันทึกไม่สำเร็จ ("+(err&&err.message||"เชื่อมต่อไม่ได้")+") กรุณาลองใหม่","err");
-    }finally{ btn.disabled=false; }
+      msg("บันทึกไม่สำเร็จ: "+errText(err),"err");
+    }finally{ btn.disabled=!canWrite(); }
   });
 
   /* ---------------- table ---------------- */
   function renderHead(){
-    $("thead").innerHTML='<th>ประทับเวลา</th>'+cur.fields.map(f=>'<th'+(isNum(f)?' class="num"':'')+'>'+f.label+(f.unit&&f.unit!=="ซอง"&&f.unit!=="คัน"?' ('+f.unit+')':'')+'</th>').join("")+'<th></th>';
+    $("thead").innerHTML='<th>ประทับเวลา</th>'+cur.fields.map(f=>'<th'+(isNum(f)?' class="num"':'')+'>'+f.label+(f.unit&&f.unit!=="ซอง"&&f.unit!=="คัน"?' ('+f.unit+')':'')+'</th>').join("")+'<th>ผู้บันทึก</th><th></th>';
   }
   function filtered(){
     const q=$("q").value.trim().toLowerCase(), fr=$("from").value, t=$("to").value;
-    const sk=cur.fields.filter(f=>f.search).map(f=>f.k);
+    const sk=cur.fields.filter(f=>f.search).map(f=>f.k).concat(["by"]);
     return data[cur.key].filter(r=>{
       if(fr && (r.date||"")<fr) return false;
       if(t && (r.date||"")>t) return false;
@@ -494,23 +542,27 @@ const REFRESH_SECONDS = 30;
   function cell(f,r){
     const v=r[f.k];
     if(f.k==="date") return '<td>'+fmtDate(v)+'</td>';
-    if(f.type==="textarea") return '<td class="note">'+(v?esc(v):'<span style="color:#c3bba6">-</span>')+'</td>';
-    if(isNum(f)){ if(v==null||v==="") return '<td class="num" style="color:#c3bba6">-</td>'; return '<td class="num'+(f.bad&&num(v)>0?' bad':'')+'">'+nf.format(num(v))+'</td>'; }
+    if(f.type==="textarea") return '<td class="note">'+(v?esc(v):'<span class="dim">-</span>')+'</td>';
+    if(isNum(f)){ if(v==null||v==="") return '<td class="num dim">-</td>'; return '<td class="num'+(f.bad&&num(v)>0?' bad':'')+'">'+nf.format(num(v))+'</td>'; }
     if(f.chip&&v) return '<td><span class="chip">'+esc(v)+'</span></td>';
     return '<td>'+(v?esc(v):'-')+'</td>';
   }
   function render(){
-    const rows=filtered(), all=data[cur.key], ncol=cur.fields.length+2;
+    const rows=filtered(), all=data[cur.key], ncol=cur.fields.length+3;
     if(!rows.length){
       $("tbody").innerHTML='<tr><td colspan="'+ncol+'" class="empty"><div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8aa572" stroke-width="1.5" stroke-linecap="round"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19 13 11"/></svg></div>'+
         (all.length?"ไม่พบรายการที่ตรงกับตัวกรอง":(loaded?"ยังไม่มีข้อมูล"+cur.name+" — เริ่มบันทึกรายการแรกได้ทางซ้ายมือ":"กำลังโหลดข้อมูล…"))+'</td></tr>';
     } else {
-      $("tbody").innerHTML=rows.map(r=>'<tr data-id="'+esc(r.id)+'"'+(r.id===editingId?' class="editing"':'')+'><td class="ts">'+fmtTs(r.ts)+'</td>'+cur.fields.map(f=>cell(f,r)).join("")+'<td><button class="rowbtn" data-act="edit" type="button">แก้ไข</button><button class="rowbtn del" data-act="del" type="button">ลบ</button></td></tr>').join("");
+      $("tbody").innerHTML=rows.map(r=>'<tr data-id="'+esc(r.id)+'"'+(r.id===editingId?' class="editing"':'')+'><td class="ts">'+fmtTs(r.ts)+'</td>'+cur.fields.map(f=>cell(f,r)).join("")+
+        '<td class="by" title="'+esc(r.by)+(r.upd?' · แก้ไขล่าสุดโดย '+esc(r.upd):'')+'">'+esc(shortName(r.by))+'</td>'+
+        '<td>'+(canWrite()?'<button class="rowbtn" data-act="edit" type="button">แก้ไข</button><button class="rowbtn del" data-act="del" type="button">ลบ</button>':'')+'</td></tr>').join("");
     }
     const sum=k=>rows.reduce((a,r)=>a+num(r[k]),0);
     $("stats").innerHTML='<div class="stat"><div class="k">จำนวนรายการ</div><div class="v">'+nf.format(rows.length)+'</div></div>'+
       cur.stats.map(s=>'<div class="stat'+(s.warn?' warn':'')+'"><div class="k">'+s.label+'</div><div class="v">'+nf.format(sum(s.k))+(s.unit?' <small>'+s.unit+'</small>':'')+'</div></div>').join("");
     $("footText").textContent="แสดง "+nf.format(rows.length)+" จาก "+nf.format(all.length)+" รายการ · "+cur.name;
+    const f=$("from").value, t=$("to").value, td=todayISO();
+    $("todayBtn").classList.toggle("on", f===td && t===td);
   }
   function fillLists(){
     const allRows=[].concat(...LINES.map(L=>data[L.key]));
@@ -519,6 +571,7 @@ const REFRESH_SECONDS = 30;
   }
   ["q","from","to"].forEach(id=>$(id).addEventListener("input",render));
   $("clearFilter").onclick=()=>{ $("q").value="";$("from").value="";$("to").value=""; render(); };
+  $("todayBtn").onclick=()=>{ const td=todayISO(); if($("from").value===td&&$("to").value===td){ $("from").value="";$("to").value=""; } else { $("from").value=td; $("to").value=td; } render(); };
 
   /* ---------------- row actions ---------------- */
   $("tbody").addEventListener("click",e=>{
@@ -536,21 +589,21 @@ const REFRESH_SECONDS = 30;
   $("mYes").onclick=async()=>{
     const p=pendingDelete; $("modal").classList.remove("show"); pendingDelete=null;
     if(!p) return;
-    try{ await store.remove(p.L,p.id); toast("ลบรายการแล้ว"); if(editingId===p.id) resetForm(); await refresh(p.L); }
-    catch(err){ toast("ลบไม่สำเร็จ"); }
+    try{ const {error}=await sb.from(p.L.table).delete().eq("id",p.id); if(error) throw error; toast("ลบรายการแล้ว"); if(editingId===p.id) resetForm(); await refresh(p.L); }
+    catch(err){ toast("ลบไม่สำเร็จ: "+errText(err)); }
   };
 
   /* ---------------- export ---------------- */
   function tableRows(){
     const rows=filtered();
-    const head=["ประทับเวลา"].concat(cur.fields.map(f=>f.label));
-    return {rows, matrix:[head].concat(rows.map(r=>[fmtTs(r.ts)].concat(cur.fields.map(f=>f.k==="date"?fmtDate(r.date):(r[f.k]==null?"":r[f.k])))))};
+    const head=["ประทับเวลา"].concat(cur.fields.map(f=>f.label),["ผู้บันทึก"]);
+    return {rows, matrix:[head].concat(rows.map(r=>[fmtTs(r.ts)].concat(cur.fields.map(f=>f.k==="date"?fmtDate(r.date):(r[f.k]==null?"":r[f.k])),[r.by])))};
   }
   $("copyCsv").onclick=async()=>{
     const {rows,matrix}=tableRows();
     const clean=v=>String(v==null?"":v).replace(/[\t\r\n]+/g," ");
     try{ await navigator.clipboard.writeText(matrix.map(r=>r.map(clean).join("\t")).join("\n")); toast("คัดลอก "+rows.length+" รายการ ("+cur.name+") แล้ว"); }
-    catch(e){ toast("คัดลอกไม่สำเร็จ (ต้องเปิดผ่าน https)"); }
+    catch(e){ toast("คัดลอกไม่สำเร็จ"); }
   };
   $("dlCsv").onclick=()=>{
     const {rows,matrix}=tableRows();
@@ -564,29 +617,64 @@ const REFRESH_SECONDS = 30;
     toast("ดาวน์โหลด "+rows.length+" รายการแล้ว");
   };
 
-  /* ---------------- load ---------------- */
-  async function refresh(L){
-    data[L.key]=await store.list(L);
-    fillLists(); renderTabs(); if(L===cur) render();
+  /* ---------------- auth ---------------- */
+  function showLogin(state,text){
+    $("app").style.display="none"; $("login").style.display="";
+    $("loginBtn").style.display = state==="denied" ? "none" : "";
+    $("loginSwitch").style.display = state==="denied" ? "" : "none";
+    $("loginMsg").textContent=text||""; $("loginMsg").className="lmsg "+(state==="denied"||state==="error"?"err":"");
   }
-  async function refreshAll(){
-    try{
-      await Promise.all(LINES.map(refresh));
-      loaded=true; render(); $("errNote").style.display="none";
-      setStatus("ok", store.mode==="sheets" ? "เชื่อม Google Sheets แล้ว · อัปเดต "+fmtTs(Date.now()).slice(11,16) : "เก็บข้อมูลในเครื่องนี้");
-    }catch(err){
-      const m=(err&&err.message)||"ไม่ทราบสาเหตุ";
-      setStatus("err","เชื่อมต่อ Google Sheets ไม่ได้");
-      $("statusText").title=m;
-      $("errNote").textContent="สาเหตุ: "+m; $("errNote").style.display="";
-    }
+  function showApp(){
+    $("login").style.display="none"; $("app").style.display="";
+    const meta=(user&&user.user_metadata)||{};
+    $("userName").textContent=meta.full_name||meta.name||shortName(user.email);
+    $("userEmail").textContent=user.email+(role==="viewer"?" · ดูอย่างเดียว":"");
+    const av=meta.avatar_url||meta.picture;
+    if(av){ $("avatar").src=av; $("avatar").style.display=""; $("avatarTxt").style.display="none"; }
+    else { $("avatar").style.display="none"; $("avatarTxt").style.display=""; $("avatarTxt").textContent=(user.email||"?").charAt(0).toUpperCase(); }
   }
+  async function onSession(session){
+    user=session&&session.user||null;
+    if(!user){ started=false; showLogin("signed-out",""); return; }
+    showLogin("checking","กำลังตรวจสอบสิทธิ์…");
+    $("loginBtn").style.display="none";
+    const {data:r,error}=await sb.rpc("prod_role");
+    if(error){ showLogin("error","ตรวจสอบสิทธิ์ไม่สำเร็จ: "+errText(error)); return; }
+    role=r||null;
+    if(!role){ showLogin("denied","บัญชี "+user.email+" ยังไม่ได้รับสิทธิ์ใช้งานเว็บนี้ กรุณาเข้าสู่ระบบด้วย "+LOGIN_HINT); return; }
+    showApp();
+    if(!started){
+      started=true;
+      const initial=LINES.find(L=>L.key===location.hash.slice(1)); if(initial) cur=initial;
+      buildForm(); renderTabs(); renderHead(); render();
+      setStatus("","กำลังโหลด…");
+      await refreshAll(); subscribe();
+    } else { setFormMode(); render(); }
+  }
+  async function signIn(){
+    $("loginMsg").textContent="กำลังไปหน้าเข้าสู่ระบบ Google…"; $("loginMsg").className="lmsg";
+    const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account",login_hint:LOGIN_HINT}}});
+    if(error) showLogin("error","เข้าสู่ระบบไม่สำเร็จ: "+errText(error));
+  }
+  async function signOut(){
+    try{ if(channel){ await sb.removeChannel(channel); channel=null; } }catch(_){}
+    await sb.auth.signOut(); role=null; LINES.forEach(L=>data[L.key]=[]); loaded=false;
+    showLogin("signed-out","ออกจากระบบแล้ว");
+  }
+  $("loginBtn").onclick=signIn; $("loginSwitch").onclick=async()=>{ await sb.auth.signOut(); signIn(); };
+  $("logoutBtn").onclick=signOut;
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden && started) refreshAll(); });
 
-  const initial=LINES.find(L=>L.key===location.hash.slice(1));
-  if(initial) cur=initial;
-  buildForm(); renderTabs(); renderHead(); render();
-  refreshAll();
-  if(store.mode==="sheets") setInterval(()=>{ if(!document.hidden && !editingId) refreshAll(); }, REFRESH_SECONDS*1000);
+  if(!window.supabase||!window.supabase.createClient){ showLogin("error","โหลดระบบ Supabase ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วรีเฟรช"); return; }
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  let lastUid;
+  sb.auth.onAuthStateChange((ev,session)=>{
+    const uid=session&&session.user?session.user.id:null;
+    if(ev==="TOKEN_REFRESHED" && uid===lastUid) return;
+    if(uid===lastUid && ev!=="INITIAL_SESSION" && ev!=="SIGNED_OUT") return;
+    lastUid=uid;
+    setTimeout(()=>onSession(session),0);
+  });
 })();
 </script>
 </body>

@@ -1,59 +1,48 @@
 # บันทึกข้อมูลผลิต (ไลน์นึ่ง / รีด / ตัด / แพ็ค)
 
-เว็บสำหรับบันทึกข้อมูลการผลิตรายวันของ Foodle Noodle เก็บข้อมูลลง Google Sheets
+เว็บบันทึกข้อมูลการผลิตรายวันของ Foodle Noodle — ล็อกอินด้วย Google และเก็บข้อมูลใน Supabase
 
 - **เว็บ:** https://production719.github.io/Production/
-- **เวอร์ชันปัจจุบัน:** ดูที่ป้าย "เวอร์ชัน" มุมบนของเว็บ หรือไฟล์ [CHANGELOG.md](CHANGELOG.md)
+- **เวอร์ชันปัจจุบัน:** ดูป้าย "เวอร์ชัน" มุมบนของเว็บ หรือ [CHANGELOG.md](CHANGELOG.md)
 - ลิงก์ตรงไปแต่ละไลน์: `#steam` (นึ่ง) `#press` (รีด) `#cut` (ตัด) `#pack` (แพ็ค)
 
-## ไฟล์
+## ระบบ
 
-| ไฟล์ | หน้าที่ |
+| ส่วน | รายละเอียด |
 |---|---|
-| `index.html` | ตัวเว็บทั้งหมด (ไฟล์เดียว) |
-| `Code.gs` | โค้ด Google Apps Script สำหรับเก็บข้อมูลลง Google Sheets |
-| `CHANGELOG.md` | ประวัติเวอร์ชัน |
+| หน้าเว็บ | `index.html` ไฟล์เดียว เผยแพร่ด้วย GitHub Pages |
+| ล็อกอิน | Supabase Auth — Google |
+| ฐานข้อมูล | Supabase ตาราง `prod_steam`, `prod_press`, `prod_cut`, `prod_pack` |
+| สิทธิ์ | ตาราง `prod_allowed_emails` (role: `editor` = บันทึก/แก้ไข/ลบ, `viewer` = ดูอย่างเดียว) + Row Level Security |
 
-## เปิดเว็บด้วย GitHub Pages (ทำครั้งเดียว)
+ทุกรายการเก็บ `created_at`, `created_by_email`, `updated_at`, `updated_by_email` อัตโนมัติ และหน้าเว็บอัปเดตทันทีเมื่อมีคนบันทึก (Realtime)
 
-1. ไปที่ **Settings > Pages** ของ repo นี้
-2. หัวข้อ *Build and deployment* เลือก Source = **Deploy from a branch**
-3. Branch = **main** โฟลเดอร์ **/ (root)** แล้วกด **Save**
-4. รอประมาณ 1–2 นาที เว็บจะอยู่ที่ https://production719.github.io/Production/
+## ตั้งค่าครั้งแรก (ทำครั้งเดียว)
 
-## เชื่อมกับ Google Sheets (ทำครั้งเดียว)
+ใน Supabase Dashboard → **Authentication → URL Configuration** → **Redirect URLs** → เพิ่ม
 
-1. สร้าง Google Sheets ใหม่ > เมนู **ส่วนขยาย > Apps Script**
-2. ลบโค้ดเดิม วางโค้ดจาก `Code.gs` > บันทึก
-3. **Deploy > New deployment** > ประเภท **Web app**
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-4. คัดลอก URL ที่ลงท้ายด้วย `/exec`
-5. ใน GitHub เปิดไฟล์ `index.html` > กดไอคอนดินสอ (Edit) > หาบรรทัด
-   ```js
-   const API_URL = "";
-   ```
-   แล้ววาง URL ระหว่างเครื่องหมายคำพูด > **Commit changes** เว็บจะอัปเดตเองใน 1–2 นาที
+```
+https://production719.github.io/Production/
+```
 
-ระบบจะสร้างแท็บ ไลน์นึ่ง / ไลน์รีด / ไลน์ตัด / ไลน์แพ็ค ในชีตให้เอง (คอลัมน์ A เป็นรหัสรายการ ถูกซ่อน ห้ามลบหรือแก้)
+(ถ้าไม่เพิ่ม หลังล็อกอิน Google จะพากลับไปที่ Site URL แทนหน้านี้)
 
-> ถ้ายังไม่ใส่ `API_URL` เว็บยังใช้ได้ แต่ข้อมูลเก็บในเบราว์เซอร์เครื่องนั้นเท่านั้น
+## เพิ่ม / ลบ ผู้ใช้
+
+Supabase Dashboard → **Table Editor → `prod_allowed_emails`** → Insert row ใส่อีเมล และ role (`editor` หรือ `viewer`)
+หรือใช้ SQL Editor:
+
+```sql
+insert into prod_allowed_emails(email, role) values ('someone@foodlenoodle.com', 'editor');
+delete from prod_allowed_emails where email = 'someone@foodlenoodle.com';
+```
 
 ## การขึ้นเวอร์ชันใหม่
 
-เมื่อแก้ไขเว็บ ให้ปรับ 2 จุดใน `index.html` แล้วบันทึกลง `CHANGELOG.md` ด้วย
+แก้ `const VERSION` และเพิ่มรายการบนสุดของ `CHANGELOG` ใน `index.html` แล้วบันทึกลง `CHANGELOG.md`
+แก้เล็กน้อย → 3.0 → 3.1 · เปลี่ยนโครงสร้างใหญ่ → 4.0
 
-```js
-const VERSION = "v2.2";          // เปลี่ยนเลขเวอร์ชัน
-const CHANGELOG = [
-  {v:"v2.2", d:"วว/ดด/ปปปป", items:["สิ่งที่เปลี่ยน"]},   // เพิ่มบรรทัดบนสุด
-  ...
-```
+## หมายเหตุ
 
-หลักการตั้งเลข: แก้เล็กน้อย/แก้บั๊ก → เลขหลังจุด (2.1 → 2.2) · เพิ่มไลน์หรือเปลี่ยนโครงสร้างใหญ่ → เลขหน้า (2.x → 3.0)
-
-## ข้อควรระวัง
-
-- repo นี้เป็นสาธารณะ ใครก็เห็นโค้ดและ URL `/exec` ได้ (ข้อมูลในชีตไม่ถูกเปิดเผย แต่คนที่รู้ URL สามารถส่งข้อมูลเข้ามาได้)
-- ถ้าแก้ `Code.gs` ภายหลัง ต้อง **Deploy > Manage deployments > Edit > New version** ทุกครั้ง
-- ย้ายข้อมูลเก่า: กด "คัดลอกเป็นตาราง" จากเว็บเดิม แล้ววางในแท็บที่ตรงกันโดยเริ่มที่คอลัมน์ B (ไม่ต้องวางหัวตาราง)
+- คีย์ใน `index.html` เป็น Publishable key ของ Supabase ใส่ในหน้าเว็บได้ตามปกติ — การเข้าถึงข้อมูลคุมด้วย RLS (คนที่ไม่อยู่ใน `prod_allowed_emails` จะอ่าน/เขียนไม่ได้)
+- รุ่น v2.x ที่ใช้ Google Sheets + Apps Script เลิกใช้แล้ว
