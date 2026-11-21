@@ -22,16 +22,36 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function doGet() {
-  return ContentService.createTextOutput(JSON.stringify({ ok: true, msg: 'Production log API is running' }))
+function doGet(e) {
+  var out = { ok: true, msg: 'Production log API is running' };
+  if (e && e.parameter && e.parameter.check) {
+    try {
+      var ss = getSS_();
+      out.spreadsheet = ss.getName();
+      out.sheets = ss.getSheets().map(function (s) { return s.getName(); });
+    } catch (err) {
+      out.ok = false;
+      out.error = String(err && err.message || err);
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ID ของ Google Sheets "บันทึกข้อมูลผลิต" (ใช้เมื่อสคริปต์ไม่ได้สร้างจากเมนูในชีต)
+var SHEET_ID = '1JnjM7CpExMFEY7P5mk-mz4tc_hlvGshZOzFYTOQVWG0';
+
+function getSS_() {
+  var ss = null;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (err) { ss = null; }
+  return ss || SpreadsheetApp.openById(SHEET_ID);
 }
 
 var ALLOWED_SHEETS = ['ไลน์นึ่ง', 'ไลน์รีด', 'ไลน์ตัด', 'ไลน์แพ็ค'];
 
 function handle_(req) {
   if (ALLOWED_SHEETS.indexOf(req.sheet) < 0) throw new Error('unknown sheet');
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSS_();
   var tz = ss.getSpreadsheetTimeZone();
 
   if (req.action === 'delete') {

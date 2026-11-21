@@ -149,6 +149,7 @@
   <div id="localNote" style="display:none;background:#fff6dc;border:1px solid #ecd9a6;color:#7a6330;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px">
     ยังไม่ได้ตั้งค่า Google Sheets — ข้อมูลจะเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น เครื่องอื่นจะมองไม่เห็น (ตั้งค่า API_URL ตามไฟล์ README)
   </div>
+  <div id="errNote" style="display:none;background:#f6e3d8;border:1px solid #e5bfa9;color:#8a4a2c;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px"></div>
   <nav class="flow" id="flow"></nav>
 
   <div class="grid">
@@ -247,8 +248,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzNQ3IDiX7J2dmOrtX5Gc49
 const REFRESH_SECONDS = 30;
 
 (function(){
-  const VERSION = "v2.2";
+  const VERSION = "v2.3";
   const CHANGELOG = [
+    {v:"v2.3", d:"21/11/2026", items:["แสดงสาเหตุเมื่อเชื่อมต่อ Google Sheets ไม่ได้","Code.gs ระบุชีตด้วย ID โดยตรง และเพิ่มการตรวจสอบ ?check=1"]},
     {v:"v2.2", d:"21/11/2026", items:["เชื่อมต่อ Google Sheets “บันทึกข้อมูลผลิต” แล้ว — ข้อมูลทุกไลน์ใช้ร่วมกันได้ทุกเครื่อง"]},
     {v:"v2.1", d:"21/11/2026", items:["แสดงเวอร์ชันชัดเจนขึ้น: ป้ายเวอร์ชันที่หัวเว็บ และแถบเวอร์ชัน/วันที่อัปเดตท้ายหน้า","เผยแพร่บน GitHub Pages"]},
     {v:"v2.0", d:"21/11/2026", items:["เพิ่มไลน์นึ่ง ไลน์รีด และไลน์ตัด","เรียงแท็บตามขั้นตอนผลิต: นึ่ง → รีด → ตัด → แพ็ค","เพิ่มช่องหมายเหตุในทุกไลน์","แสดงเลขเวอร์ชันและประวัติการปรับปรุง","รุ่นสำหรับติดตั้งบนเซิร์ฟเวอร์เอง: เก็บข้อมูลลง Google Sheets"]},
@@ -319,9 +321,13 @@ const REFRESH_SECONDS = 30;
     const types = L => ["text","timestamp"].concat(L.fields.map(f=>f.type==="number"?"number":f.type==="date"?"date":"text"));
     const toRow = (L,id,r) => [id, r.ts].concat(L.fields.map(f=> r[f.k]==null ? "" : r[f.k]));
     async function post(body){
-      const res = await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
-      const j = await res.json();
-      if(!j.ok) throw new Error(j.error||"error");
+      let res, txt, j;
+      try{ res = await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}); }
+      catch(e){ throw new Error("เรียก Apps Script ไม่ได้ (ตรวจว่า Deploy ตั้ง Who has access = Anyone)"); }
+      txt = await res.text();
+      try{ j = JSON.parse(txt); }
+      catch(e){ throw new Error("Apps Script ไม่ได้ตอบเป็น JSON (HTTP "+res.status+") — ตรวจสิทธิ์ Anyone และ Deploy เวอร์ชันใหม่"); }
+      if(!j.ok) throw new Error("Apps Script: "+(j.error||"error"));
       return j;
     }
     return {
@@ -566,10 +572,13 @@ const REFRESH_SECONDS = 30;
   async function refreshAll(){
     try{
       await Promise.all(LINES.map(refresh));
-      loaded=true; render();
+      loaded=true; render(); $("errNote").style.display="none";
       setStatus("ok", store.mode==="sheets" ? "เชื่อม Google Sheets แล้ว · อัปเดต "+fmtTs(Date.now()).slice(11,16) : "เก็บข้อมูลในเครื่องนี้");
     }catch(err){
+      const m=(err&&err.message)||"ไม่ทราบสาเหตุ";
       setStatus("err","เชื่อมต่อ Google Sheets ไม่ได้");
+      $("statusText").title=m;
+      $("errNote").textContent="สาเหตุ: "+m; $("errNote").style.display="";
     }
   }
 
