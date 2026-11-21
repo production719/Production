@@ -249,7 +249,7 @@ const REFRESH_SECONDS = 30;
 (function(){
   const VERSION = "v2.2";
   const CHANGELOG = [
-    {v:"v2.2", d:"21/11/2026", items:["เชื่อมต่อ Google Sheets \"บันทึกข้อมูลผลิต\" แล้ว — ข้อมูลทุกไลน์ใช้ร่วมกันได้ทุกเครื่อง"]},
+    {v:"v2.2", d:"21/11/2026", items:["เชื่อมต่อ Google Sheets “บันทึกข้อมูลผลิต” แล้ว — ข้อมูลทุกไลน์ใช้ร่วมกันได้ทุกเครื่อง"]},
     {v:"v2.1", d:"21/11/2026", items:["แสดงเวอร์ชันชัดเจนขึ้น: ป้ายเวอร์ชันที่หัวเว็บ และแถบเวอร์ชัน/วันที่อัปเดตท้ายหน้า","เผยแพร่บน GitHub Pages"]},
     {v:"v2.0", d:"21/11/2026", items:["เพิ่มไลน์นึ่ง ไลน์รีด และไลน์ตัด","เรียงแท็บตามขั้นตอนผลิต: นึ่ง → รีด → ตัด → แพ็ค","เพิ่มช่องหมายเหตุในทุกไลน์","แสดงเลขเวอร์ชันและประวัติการปรับปรุง","รุ่นสำหรับติดตั้งบนเซิร์ฟเวอร์เอง: เก็บข้อมูลลง Google Sheets"]},
     {v:"v1.1", d:"14/11/2026", items:["ตั้งชื่อหน้าเป็นไลน์แพ็ค"]},
@@ -549,7 +549,7 @@ const REFRESH_SECONDS = 30;
   $("dlCsv").onclick=()=>{
     const {rows,matrix}=tableRows();
     const q=v=>{ const s=String(v==null?"":v); return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
-    const csv="\\uFEFF"+matrix.map(r=>r.map(q).join(",")).join("\r\n");
+    const csv=String.fromCharCode(65279)+matrix.map(r=>r.map(q).join(",")).join("\r\n");
     const a=document.createElement("a");
     a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
     a.download="production_"+cur.key+"_"+todayISO()+".csv";
