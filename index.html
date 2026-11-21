@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บันทึกข้อมูลผลิต</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&family=Mitr:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f1e8; --paper:#fffdf8; --ink:#33402f; --muted:#6f7a68; --line:#e3dccb;
+    --leaf:#5f7f4f; --leaf-d:#4a6a3d; --leaf-l:#e6eedc; --moss:#8aa572;
+    --clay:#b86f4c; --clay-l:#f6e3d8; --sand:#efe7d4; --shadow:0 1px 2px rgba(60,55,40,.06),0 6px 20px rgba(60,55,40,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Sarabun",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;
+    background-image:radial-gradient(circle at 10% -10%,#e7eedb 0,transparent 40%),radial-gradient(circle at 100% 0,#f1e6d3 0,transparent 35%);
+    background-attachment:fixed;min-height:100vh}
+  h1,h2,h3{font-family:"Mitr",sans-serif;font-weight:500;margin:0}
+  .wrap{max-width:1280px;margin:0 auto;padding:28px 20px 60px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .logo{width:46px;height:46px;border-radius:14px;background:var(--leaf);display:grid;place-items:center;box-shadow:var(--shadow)}
+  header h1{font-size:24px;color:var(--leaf-d);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  header p{margin:0;color:var(--muted);font-size:14px}
+  .ver{font-family:"Sarabun";font-size:13px;font-weight:600;background:var(--leaf-l);color:var(--leaf-d);border:1px solid #cfdcbf;border-radius:999px;padding:3px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .ver i{width:7px;height:7px;border-radius:50%;background:var(--moss);display:inline-block}
+  .appfoot{margin-top:28px;padding-top:16px;border-top:1px dashed #d9d0bb;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;color:var(--muted);font-size:13px}
+  .appfoot b{color:var(--leaf-d);font-weight:600}
+  .appfoot a,.linkbtn{color:var(--leaf-d);text-decoration:none;border-bottom:1px dotted var(--moss);background:none;border-top:none;border-left:none;border-right:none;font:inherit;cursor:pointer;padding:0}
+  .vlatest{display:inline-block;font-size:11.5px;background:var(--leaf);color:#fff;border-radius:999px;padding:0 8px;margin-left:6px;vertical-align:2px}
+  .ver:hover{background:#d8e5c9}
+  .status{margin-left:auto;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;background:var(--paper);padding:6px 12px;border-radius:999px;border:1px solid var(--line)}
+  .dot{width:8px;height:8px;border-radius:50%;background:#c9c2ae}
+  .dot.ok{background:var(--moss)} .dot.err{background:var(--clay)}
+
+  /* line tabs (process flow) */
+  .flow{display:flex;align-items:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:8px;box-shadow:var(--shadow)}
+  .tab{font:inherit;border:none;background:transparent;color:var(--muted);padding:10px 18px;border-radius:13px;cursor:pointer;display:flex;align-items:center;gap:10px;font-weight:500;transition:background .15s,color .15s}
+  .tab:hover{background:var(--sand);color:var(--ink)}
+  .tab .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--sand);font-size:12.5px;font-family:"Mitr"}
+  .tab .c{font-size:12px;color:var(--muted);background:#f3efe4;border-radius:999px;padding:0 8px}
+  .tab.on{background:var(--leaf);color:#fff}
+  .tab.on .n{background:rgba(255,255,255,.22);color:#fff}
+  .tab.on .c{background:rgba(255,255,255,.18);color:#fff}
+  .arrow{color:#c8bfa8;font-size:16px}
+  @media (max-width:640px){.arrow{display:none}.tab{flex:1 1 45%;justify-content:center;padding:10px}}
+
+  .grid{display:grid;grid-template-columns:380px minmax(0,1fr);gap:20px;align-items:start}
+  @media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px}
+  .card h2{font-size:18px;color:var(--leaf-d);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+
+  form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+  label{font-size:13.5px;font-weight:500;color:#4c5946}
+  label .req{color:var(--clay)}
+  input,select,textarea{font:inherit;color:var(--ink);background:#fbf9f3;border:1px solid var(--line);border-radius:11px;padding:9px 12px;outline:none;transition:border .15s,box-shadow .15s,background .15s;width:100%}
+  textarea{resize:vertical;min-height:64px}
+  input:focus,select:focus,textarea:focus{border-color:var(--moss);background:#fff;box-shadow:0 0 0 3px rgba(138,165,114,.22)}
+  input[readonly]{background:var(--sand);color:var(--muted)}
+  .unit{position:relative}
+  .unit input{padding-right:46px}
+  .unit span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+  .group{border-radius:14px;padding:12px 12px 0;margin:4px 0 12px}
+  .group.waste{background:var(--clay-l)} .group.waste .title{color:var(--clay)}
+  .group.rice{background:#f1ecdd} .group.rice .title{color:#8a7448}
+  .group .title{font-size:13px;font-weight:600;margin-bottom:8px}
+
+  .btn{font:inherit;font-weight:500;border:none;border-radius:12px;padding:10px 16px;cursor:pointer;transition:background .15s,transform .05s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--leaf);color:#fff;width:100%;padding:12px}
+  .btn-primary:hover{background:var(--leaf-d)}
+  .btn-primary:disabled{background:#aab59e;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--sand)}
+  .btn-soft{background:var(--leaf-l);color:var(--leaf-d)}
+  .btn-soft:hover{background:#d8e5c9}
+  .actions{display:flex;gap:8px;margin-top:4px}
+  .actions .btn-ghost{flex:0 0 auto}
+  .msg{font-size:13px;margin-top:10px;min-height:20px}
+  .msg.ok{color:var(--leaf-d)} .msg.err{color:var(--clay)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  @media (max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .k{font-size:12.5px;color:var(--muted)}
+  .stat .v{font-family:"Mitr",sans-serif;font-size:24px;color:var(--ink);margin-top:2px;font-variant-numeric:tabular-nums}
+  .stat .v small{font-size:13px;color:var(--muted);font-family:"Sarabun"}
+  .stat.warn .v{color:var(--clay)}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
+  .toolbar .field{margin:0}
+  .toolbar .search{flex:1;min-width:180px}
+  .toolbar .date{width:150px}
+  .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;max-height:620px}
+  table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+  thead th{position:sticky;top:0;background:#eef2e6;color:#45573c;font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:13px}
+  tbody td{padding:9px 12px;border-bottom:1px solid #efe9da;white-space:nowrap;font-variant-numeric:tabular-nums}
+  tbody td.note{white-space:normal;min-width:180px;max-width:280px;color:#5b6655;font-size:13.5px}
+  tbody tr:nth-child(even) td{background:#fcfaf4}
+  tbody tr:hover td{background:#f3f6ec}
+  td.num,th.num{text-align:right}
+  td.bad{color:var(--clay);font-weight:500}
+  .chip{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--leaf-l);color:var(--leaf-d);font-size:12.5px}
+  .ts{color:var(--muted);font-size:12.5px}
+  .rowbtn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:8px;color:var(--muted);font:inherit;font-size:13px}
+  .rowbtn:hover{background:var(--sand);color:var(--ink)}
+  .rowbtn.del:hover{background:var(--clay-l);color:var(--clay)}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;white-space:normal}
+  .empty svg{opacity:.6;margin-bottom:6px}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--muted);font-size:13px;flex-wrap:wrap;gap:8px}
+  tr.editing td{background:#fff6dc !important}
+
+  .modal{position:fixed;inset:0;background:rgba(51,64,47,.35);display:none;place-items:center;z-index:20;padding:20px}
+  .modal.show{display:grid}
+  .modal .box{background:var(--paper);border-radius:18px;padding:22px;max-width:420px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+  .modal p{margin:8px 0 18px;color:var(--muted)}
+  .modal .actions{justify-content:flex-end}
+  .log{margin:12px 0 18px;padding:0;list-style:none;max-height:50vh;overflow:auto}
+  .log>li{padding:10px 0;border-bottom:1px solid var(--line)}
+  .log>li:last-child{border:none}
+  .log ul li{padding:2px 0}
+  .log b{font-family:"Mitr";font-weight:500;color:var(--leaf-d)}
+  .log span{color:var(--muted);font-size:13px;margin-left:6px}
+  .log span.vlatest{color:#fff;font-size:11.5px}
+  .log ul{margin:6px 0 0;padding-left:20px;color:#4c5946;font-size:14px}
+  .btn-danger{background:var(--clay);color:#fff}
+  .btn-danger:hover{background:#9f5a3a}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;opacity:0;transition:.25s;font-size:14px;z-index:30;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19 13 11"/></svg>
+    </div>
+    <div>
+      <h1>บันทึกข้อมูลผลิต <button class="ver" id="verBtn" type="button" title="ดูประวัติเวอร์ชัน"></button></h1>
+      <p>ไลน์นึ่ง → รีด → ตัด → แพ็ค · บันทึกรายวัน ใช้ร่วมกันทั้งทีม</p>
+    </div>
+    <div class="status"><span class="dot" id="dot"></span><span id="statusText">กำลังเชื่อมต่อ…</span></div>
+  </header>
+
+  <div id="localNote" style="display:none;background:#fff6dc;border:1px solid #ecd9a6;color:#7a6330;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px">
+    ยังไม่ได้ตั้งค่า Google Sheets — ข้อมูลจะเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น เครื่องอื่นจะมองไม่เห็น (ตั้งค่า API_URL ตามไฟล์ README)
+  </div>
+  <nav class="flow" id="flow"></nav>
+
+  <div class="grid">
+    <section class="card">
+      <h2 id="formTitle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span></span>
+      </h2>
+      <div class="sub" id="formSub"></div>
+      <form id="form" autocomplete="off" novalidate>
+        <div id="fields"></div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="saveBtn">บันทึกข้อมูล</button>
+          <button type="button" class="btn btn-ghost" id="cancelBtn" style="display:none">ยกเลิก</button>
+        </div>
+        <div class="msg" id="msg"></div>
+      </form>
+      <datalist id="dl_customer"></datalist>
+      <datalist id="dl_noodleType"></datalist>
+      <datalist id="dl_ink"></datalist>
+      <datalist id="dl_riceLot"></datalist>
+    </section>
+
+    <section>
+      <div class="stats" id="stats"></div>
+      <div class="card">
+        <div class="toolbar">
+          <div class="field search">
+            <label for="q">ค้นหา</label>
+            <input id="q" placeholder="ลูกค้า, PO, ชนิดเส้น, หมายเหตุ…">
+          </div>
+          <div class="field date">
+            <label for="from">ตั้งแต่วันที่</label>
+            <input type="date" id="from">
+          </div>
+          <div class="field date">
+            <label for="to">ถึงวันที่</label>
+            <input type="date" id="to">
+          </div>
+          <button class="btn btn-ghost" id="clearFilter" type="button">ล้างตัวกรอง</button>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr id="thead"></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="foot">
+          <span id="footText"></span>
+          <span style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-soft" id="copyCsv" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            คัดลอกเป็นตาราง
+          </button>
+          <button class="btn btn-soft" id="dlCsv" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+            ดาวน์โหลด CSV
+          </button>
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer class="appfoot">
+    <span>บันทึกข้อมูลผลิต · <b>เวอร์ชัน <span id="footVer"></span></b> · อัปเดตล่าสุด <span id="footDate"></span></span>
+    <span><button class="linkbtn" id="footLog" type="button">ดูประวัติเวอร์ชัน</button> · <a href="https://github.com/production719/Production" target="_blank" rel="noopener">GitHub</a></span>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h3>ลบรายการนี้?</h3>
+    <p id="modalText">ลบแล้วไม่สามารถกู้คืนได้</p>
+    <div class="actions">
+      <button class="btn btn-ghost" id="mNo" type="button">ยกเลิก</button>
+      <button class="btn btn-danger" id="mYes" type="button">ลบ</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="verModal">
+  <div class="box">
+    <h3>ประวัติเวอร์ชัน</h3><p style="margin:4px 0 0">ตอนนี้ใช้งานเวอร์ชัน <b id="verNow"></b></p>
+    <ul class="log" id="verLog"></ul>
+    <div class="actions"><button class="btn btn-soft" id="verClose" type="button">ปิด</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   ตั้งค่า: วาง URL ของ Google Apps Script Web App ที่นี่
+   (ดูวิธีตั้งค่าในไฟล์ README.md)
+   ถ้าเว้นว่าง ข้อมูลจะเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น
+   ============================================================ */
+const API_URL = "";
+const REFRESH_SECONDS = 30;
+
+(function(){
+  const VERSION = "v2.1";
+  const CHANGELOG = [
+    {v:"v2.1", d:"21/11/2026", items:["แสดงเวอร์ชันชัดเจนขึ้น: ป้ายเวอร์ชันที่หัวเว็บ และแถบเวอร์ชัน/วันที่อัปเดตท้ายหน้า","เผยแพร่บน GitHub Pages"]},
+    {v:"v2.0", d:"21/11/2026", items:["เพิ่มไลน์นึ่ง ไลน์รีด และไลน์ตัด","เรียงแท็บตามขั้นตอนผลิต: นึ่ง → รีด → ตัด → แพ็ค","เพิ่มช่องหมายเหตุในทุกไลน์","แสดงเลขเวอร์ชันและประวัติการปรับปรุง","รุ่นสำหรับติดตั้งบนเซิร์ฟเวอร์เอง: เก็บข้อมูลลง Google Sheets"]},
+    {v:"v1.1", d:"14/11/2026", items:["ตั้งชื่อหน้าเป็นไลน์แพ็ค"]},
+    {v:"v1.0", d:"14/11/2026", items:["เปิดใช้งานบันทึกข้อมูลไลน์แพ็ค พร้อมค้นหา กรองวันที่ สรุปยอด และคัดลอกไป Excel/Sheets"]}
+  ];
+
+  const F = {
+    date:{label:"วันที่",type:"date",req:true},
+    customer:{label:"ลูกค้า",type:"text",req:true,list:"dl_customer",ph:"ชื่อลูกค้า",search:true},
+    po:{label:"PO",type:"text",ph:"เลขที่ PO",search:true},
+    noodleType:{label:"ชนิดเส้นและขนาด",type:"text",req:true,list:"dl_noodleType",ph:"เช่น เส้นเล็ก 200 g",search:true},
+    note:{label:"หมายเหตุ",type:"textarea",ph:"รายละเอียดเพิ่มเติม เช่น เครื่องขัดข้อง เปลี่ยนล็อต ฯลฯ",search:true}
+  };
+  const LINES = [
+    { key:"steam", name:"ไลน์นึ่ง", sheet:"ไลน์นึ่ง",
+      fields:["date","customer","po",
+        {k:"plan",label:"แผนผลิต",type:"number",step:"any",rowStart:true},
+        {k:"planDone",label:"แผนผลิตได้",type:"number",step:"any"},
+        {k:"riceLot",label:"Lot ข้าวที่ใช้",type:"text",list:"dl_riceLot",ph:"เลข Lot",search:true,group:"rice"},
+        {k:"riceKg",label:"น้ำหนักข้าวที่ใช้",type:"number",step:"0.01",unit:"กก.",group:"rice"},
+        "noodleType","note"],
+      stats:[{k:"plan",label:"แผนผลิต"},{k:"planDone",label:"แผนผลิตได้"},{k:"riceKg",label:"ข้าวที่ใช้",unit:"กก."}]
+    },
+    { key:"press", name:"ไลน์รีด", sheet:"ไลน์รีด",
+      fields:["date","customer","po",
+        {k:"plan",label:"แผนผลิต",type:"number",step:"any"},
+        {k:"carts",label:"จำนวนรถตากเส้น",type:"number",step:"1",unit:"คัน",req:true},
+        "noodleType","note"],
+      stats:[{k:"plan",label:"แผนผลิต"},{k:"carts",label:"รถตากเส้น",unit:"คัน"}]
+    },
+    { key:"cut", name:"ไลน์ตัด", sheet:"ไลน์ตัด",
+      fields:["date","customer","po","noodleType",
+        {k:"outKg",label:"น้ำหนักเส้นที่ได้",type:"number",step:"0.01",unit:"กก.",req:true},
+        "note"],
+      stats:[{k:"outKg",label:"น้ำหนักเส้นที่ได้",unit:"กก."}]
+    },
+    { key:"pack", name:"ไลน์แพ็ค", sheet:"ไลน์แพ็ค",
+      fields:["date","customer","po",
+        {k:"ink",label:"รูปแบบการ INK",type:"text",list:"dl_ink",ph:"เช่น วันผลิต/หมดอายุ",search:true,chip:true},
+        {k:"packed",label:"จำนวนซองที่แพ็คได้",type:"number",step:"1",unit:"ซอง",req:true},
+        "noodleType",
+        {k:"wasteKg",label:"น้ำหนักเส้นเสีย",type:"number",step:"0.01",unit:"กก.",group:"waste",bad:true},
+        {k:"wastePacks",label:"จำนวนซองเสีย",type:"number",step:"1",unit:"ซอง",group:"waste",bad:true},
+        "note"],
+      stats:[{k:"packed",label:"ซองที่แพ็คได้",unit:"ซอง"},{k:"wastePacks",label:"ซองเสีย",unit:"ซอง",warn:true},{k:"wasteKg",label:"น้ำหนักเส้นเสีย",unit:"กก.",warn:true}]
+    }
+  ];
+  LINES.forEach(L=>{ L.fields = L.fields.map(f=> typeof f==="string" ? Object.assign({k:f},F[f]) : f); });
+  const GROUPS = {rice:"ข้าวที่ใช้", waste:"ของเสีย"};
+
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2,"0");
+  const isoOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  const todayISO = () => isoOf(new Date());
+  const fmtTs = ms => { if(!ms) return "-"; const d=new Date(ms); return pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear()+" "+pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds()); };
+  const fmtDate = iso => { if(!iso) return "-"; const p=String(iso).split("-"); return p.length===3? p[2]+"/"+p[1]+"/"+p[0] : String(iso); };
+  const nf = new Intl.NumberFormat("th-TH",{maximumFractionDigits:2});
+  const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const num = v => { const n=parseFloat(v); return isFinite(n)?n:0; };
+  const isNum = f => f.type==="number";
+  const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+  /* ---------------- storage adapters ---------------- */
+  // Google Sheets via Apps Script: one tab per line, row 1 = headers [id, ประทับเวลา, ...labels]
+  function sheetStore(url){
+    const headers = L => ["id","ประทับเวลา"].concat(L.fields.map(f=>f.label));
+    const types = L => ["text","timestamp"].concat(L.fields.map(f=>f.type==="number"?"number":f.type==="date"?"date":"text"));
+    const toRow = (L,id,r) => [id, r.ts].concat(L.fields.map(f=> r[f.k]==null ? "" : r[f.k]));
+    async function post(body){
+      const res = await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
+      const j = await res.json();
+      if(!j.ok) throw new Error(j.error||"error");
+      return j;
+    }
+    return {
+      mode:"sheets",
+      async list(L){
+        const j = await post({action:"list",sheet:L.sheet,headers:headers(L),types:types(L)});
+        return (j.rows||[]).map(row=>{
+          const o={id:String(row[0]), ts:Number(row[1])||0};
+          L.fields.forEach((f,i)=>{ let v=row[i+2]; if(v===""||v==null) v=isNum(f)?null:""; else if(isNum(f)) v=num(v); else v=String(v); o[f.k]=v; });
+          return o;
+        }).sort((a,b)=>b.ts-a.ts);
+      },
+      async add(L,r){ const id=uid(); await post({action:"add",sheet:L.sheet,headers:headers(L),types:types(L),row:toRow(L,id,r)}); },
+      async update(L,id,r){ await post({action:"update",sheet:L.sheet,headers:headers(L),types:types(L),id,row:toRow(L,id,r)}); },
+      async remove(L,id){ await post({action:"delete",sheet:L.sheet,id}); }
+    };
+  }
+  // Browser-only fallback
+  function localStore(){
+    const key = L => "prodlog_"+L.key;
+    const read = L => { try{ return JSON.parse(localStorage.getItem(key(L))||"[]"); }catch(_){ return []; } };
+    const write = (L,a) => localStorage.setItem(key(L),JSON.stringify(a));
+    return {
+      mode:"local",
+      async list(L){ return read(L).sort((a,b)=>b.ts-a.ts); },
+      async add(L,r){ const a=read(L); a.push(Object.assign({id:uid()},r)); write(L,a); },
+      async update(L,id,r){ write(L, read(L).map(x=>x.id===id?Object.assign({id},r):x)); },
+      async remove(L,id){ write(L, read(L).filter(x=>x.id!==id)); }
+    };
+  }
+  const store = API_URL ? sheetStore(API_URL) : localStore();
+
+  let editingId=null, pendingDelete=null, cur=LINES[0], loaded=false;
+  const data = {}; LINES.forEach(L=>data[L.key]=[]);
+
+  function setStatus(state,text){ $("dot").className="dot "+(state||""); $("statusText").textContent=text; }
+  function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("show"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("show"),2400); }
+  function msg(t,cls){ const m=$("msg"); m.textContent=t||""; m.className="msg "+(cls||""); }
+
+  if(store.mode==="local") $("localNote").style.display="";
+
+  $("verBtn").innerHTML = '<i></i>เวอร์ชัน '+VERSION.replace(/^v/,"");
+  $("footVer").textContent = VERSION.replace(/^v/,"");
+  $("footDate").textContent = CHANGELOG[0].d;
+  $("verNow").textContent = VERSION;
+  $("footLog").onclick=()=>$("verModal").classList.add("show");
+  $("verLog").innerHTML = CHANGELOG.map((c,i)=>'<li><b>'+c.v+'</b>'+(i?'':'<span class="vlatest">ล่าสุด</span>')+'<span>'+c.d+'</span><ul>'+c.items.map(i=>'<li>'+esc(i)+'</li>').join("")+'</ul></li>').join("");
+  $("verBtn").onclick=()=>$("verModal").classList.add("show");
+  $("verClose").onclick=()=>$("verModal").classList.remove("show");
+
+  /* ---------------- tabs ---------------- */
+  function renderTabs(){
+    $("flow").innerHTML = LINES.map((L,i)=>
+      (i?'<span class="arrow">→</span>':'')+
+      '<button type="button" class="tab'+(L===cur?' on':'')+'" data-k="'+L.key+'"><span class="n">'+(i+1)+'</span>'+L.name+'<span class="c">'+nf.format(data[L.key].length)+'</span></button>'
+    ).join("");
+  }
+  $("flow").addEventListener("click",e=>{ const b=e.target.closest(".tab"); if(b) switchLine(b.dataset.k,true); });
+  function switchLine(k,push){
+    const L=LINES.find(x=>x.key===k)||LINES[0];
+    if(L!==cur){ cur=L; editingId=null; }
+    if(push){ try{ history.replaceState(null,"","#"+L.key); }catch(_){ location.hash=L.key; } }
+    msg(""); buildForm(); renderTabs(); renderHead(); render();
+  }
+  window.addEventListener("hashchange",()=>switchLine(location.hash.slice(1),false));
+
+  /* ---------------- form ---------------- */
+  function inputHtml(f){
+    const id="f_"+f.k;
+    const lab='<label for="'+id+'">'+f.label+(f.req?' <span class="req">*</span>':'')+'</label>';
+    let inp;
+    if(f.type==="textarea") inp='<textarea id="'+id+'" placeholder="'+esc(f.ph||"")+'"></textarea>';
+    else if(f.type==="number") inp='<input type="number" id="'+id+'" min="0" step="'+(f.step||"any")+'" inputmode="decimal" placeholder="0">';
+    else inp='<input type="'+f.type+'" id="'+id+'"'+(f.list?' list="'+f.list+'"':'')+' placeholder="'+esc(f.ph||"")+'">';
+    if(f.unit) inp='<div class="unit">'+inp+'<span>'+f.unit+'</span></div>';
+    return '<div class="field">'+lab+inp+'</div>';
+  }
+  function buildForm(){
+    const fs=cur.fields; let html='';
+    html+='<div class="row">'+inputHtml(fs.find(f=>f.k==="date"))+'<div class="field"><label for="f_ts">ประทับเวลา</label><input id="f_ts" readonly value="อัตโนมัติ"></div></div>';
+    const rest=fs.filter(f=>f.k!=="date");
+    const pairable = x=> x && !x.group && x.type!=="textarea" && x.k!=="customer" && x.k!=="noodleType";
+    for(let i=0;i<rest.length;i++){
+      const f=rest[i];
+      if(f.group){
+        const g=rest.filter(x=>x.group===f.group);
+        html+='<div class="group '+f.group+'"><div class="title">'+GROUPS[f.group]+'</div><div class="row">'+g.map(inputHtml).join("")+'</div></div>';
+        i+=g.length-1; continue;
+      }
+      const nx=rest[i+1];
+      if(pairable(f) && pairable(nx) && !nx.rowStart){ html+='<div class="row">'+inputHtml(f)+inputHtml(nx)+'</div>'; i++; }
+      else html+=inputHtml(f);
+    }
+    $("fields").innerHTML=html;
+    $("f_date").value=todayISO();
+    setFormMode();
+  }
+  function setFormMode(){
+    const ed=!!editingId;
+    $("formTitle").querySelector("span").textContent=(ed?"แก้ไขรายการ · ":"เพิ่มรายการ · ")+cur.name;
+    $("formSub").textContent=ed?"แก้ไขข้อมูลแล้วกดบันทึกการแก้ไข":"กรอกข้อมูลแล้วกดบันทึก — ประทับเวลาจะใส่ให้อัตโนมัติ";
+    $("saveBtn").textContent=ed?"บันทึกการแก้ไข":"บันทึกข้อมูล "+cur.name;
+    $("cancelBtn").style.display=ed?"":"none";
+  }
+  function readForm(){
+    const o={};
+    cur.fields.forEach(f=>{ const v=$("f_"+f.k).value; o[f.k]= isNum(f) ? (v===""?null:num(v)) : (f.type==="date"?v:v.trim()); });
+    return o;
+  }
+  function resetForm(keepDate){
+    const d=$("f_date").value;
+    editingId=null;
+    cur.fields.forEach(f=>{ $("f_"+f.k).value=""; });
+    $("f_date").value = keepDate && d ? d : todayISO();
+    $("f_ts").value="อัตโนมัติ";
+    setFormMode(); render();
+  }
+  function startEdit(id){
+    const r=data[cur.key].find(x=>x.id===id); if(!r) return;
+    editingId=id;
+    cur.fields.forEach(f=>{ const v=r[f.k]; $("f_"+f.k).value = v==null?"":v; });
+    $("f_ts").value=fmtTs(r.ts);
+    msg(""); setFormMode(); render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  $("cancelBtn").onclick=()=>{ msg(""); resetForm(); };
+
+  $("form").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const o=readForm();
+    const miss=cur.fields.filter(f=>f.req && (o[f.k]===""||o[f.k]==null));
+    if(miss.length){ msg("กรุณากรอก: "+miss.map(f=>f.label).join(", "),"err"); $("f_"+miss[0].k).focus(); return; }
+    const btn=$("saveBtn"); btn.disabled=true; msg("กำลังบันทึก…");
+    const L=cur;
+    try{
+      if(editingId){
+        const old=data[L.key].find(x=>x.id===editingId)||{};
+        await store.update(L,editingId,Object.assign({},o,{ts:old.ts||Date.now()}));
+        msg(""); toast("บันทึกการแก้ไขแล้ว"); await refresh(L); resetForm();
+      } else {
+        await store.add(L,Object.assign({},o,{ts:Date.now()}));
+        msg(""); toast("บันทึกข้อมูล"+L.name+"เรียบร้อย"); await refresh(L); resetForm(true);
+        $("f_customer").focus();
+      }
+    }catch(err){
+      msg("บันทึกไม่สำเร็จ ("+(err&&err.message||"เชื่อมต่อไม่ได้")+") กรุณาลองใหม่","err");
+    }finally{ btn.disabled=false; }
+  });
+
+  /* ---------------- table ---------------- */
+  function renderHead(){
+    $("thead").innerHTML='<th>ประทับเวลา</th>'+cur.fields.map(f=>'<th'+(isNum(f)?' class="num"':'')+'>'+f.label+(f.unit&&f.unit!=="ซอง"&&f.unit!=="คัน"?' ('+f.unit+')':'')+'</th>').join("")+'<th></th>';
+  }
+  function filtered(){
+    const q=$("q").value.trim().toLowerCase(), fr=$("from").value, t=$("to").value;
+    const sk=cur.fields.filter(f=>f.search).map(f=>f.k);
+    return data[cur.key].filter(r=>{
+      if(fr && (r.date||"")<fr) return false;
+      if(t && (r.date||"")>t) return false;
+      if(q && !sk.map(k=>r[k]||"").join(" ").toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+  function cell(f,r){
+    const v=r[f.k];
+    if(f.k==="date") return '<td>'+fmtDate(v)+'</td>';
+    if(f.type==="textarea") return '<td class="note">'+(v?esc(v):'<span style="color:#c3bba6">-</span>')+'</td>';
+    if(isNum(f)){ if(v==null||v==="") return '<td class="num" style="color:#c3bba6">-</td>'; return '<td class="num'+(f.bad&&num(v)>0?' bad':'')+'">'+nf.format(num(v))+'</td>'; }
+    if(f.chip&&v) return '<td><span class="chip">'+esc(v)+'</span></td>';
+    return '<td>'+(v?esc(v):'-')+'</td>';
+  }
+  function render(){
+    const rows=filtered(), all=data[cur.key], ncol=cur.fields.length+2;
+    if(!rows.length){
+      $("tbody").innerHTML='<tr><td colspan="'+ncol+'" class="empty"><div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8aa572" stroke-width="1.5" stroke-linecap="round"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19 13 11"/></svg></div>'+
+        (all.length?"ไม่พบรายการที่ตรงกับตัวกรอง":(loaded?"ยังไม่มีข้อมูล"+cur.name+" — เริ่มบันทึกรายการแรกได้ทางซ้ายมือ":"กำลังโหลดข้อมูล…"))+'</td></tr>';
+    } else {
+      $("tbody").innerHTML=rows.map(r=>'<tr data-id="'+esc(r.id)+'"'+(r.id===editingId?' class="editing"':'')+'><td class="ts">'+fmtTs(r.ts)+'</td>'+cur.fields.map(f=>cell(f,r)).join("")+'<td><button class="rowbtn" data-act="edit" type="button">แก้ไข</button><button class="rowbtn del" data-act="del" type="button">ลบ</button></td></tr>').join("");
+    }
+    const sum=k=>rows.reduce((a,r)=>a+num(r[k]),0);
+    $("stats").innerHTML='<div class="stat"><div class="k">จำนวนรายการ</div><div class="v">'+nf.format(rows.length)+'</div></div>'+
+      cur.stats.map(s=>'<div class="stat'+(s.warn?' warn':'')+'"><div class="k">'+s.label+'</div><div class="v">'+nf.format(sum(s.k))+(s.unit?' <small>'+s.unit+'</small>':'')+'</div></div>').join("");
+    $("footText").textContent="แสดง "+nf.format(rows.length)+" จาก "+nf.format(all.length)+" รายการ · "+cur.name;
+  }
+  function fillLists(){
+    const allRows=[].concat(...LINES.map(L=>data[L.key]));
+    const fill=(id,key)=>{ const set=[...new Set(allRows.map(r=>(r[key]||"").toString().trim()).filter(Boolean))].sort(); $(id).innerHTML=set.map(v=>'<option value="'+esc(v)+'">').join(""); };
+    fill("dl_customer","customer"); fill("dl_noodleType","noodleType"); fill("dl_ink","ink"); fill("dl_riceLot","riceLot");
+  }
+  ["q","from","to"].forEach(id=>$(id).addEventListener("input",render));
+  $("clearFilter").onclick=()=>{ $("q").value="";$("from").value="";$("to").value=""; render(); };
+
+  /* ---------------- row actions ---------------- */
+  $("tbody").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-act]"); if(!b) return;
+    const id=b.closest("tr").dataset.id;
+    if(b.dataset.act==="edit") startEdit(id);
+    else {
+      const r=data[cur.key].find(x=>x.id===id);
+      pendingDelete={id,L:cur};
+      $("modalText").textContent=cur.name+" · ลูกค้า "+(r&&r.customer||"-")+" · PO "+(r&&r.po||"-")+" · "+fmtDate(r&&r.date)+" — ลบแล้วไม่สามารถกู้คืนได้";
+      $("modal").classList.add("show");
+    }
+  });
+  $("mNo").onclick=()=>{ pendingDelete=null; $("modal").classList.remove("show"); };
+  $("mYes").onclick=async()=>{
+    const p=pendingDelete; $("modal").classList.remove("show"); pendingDelete=null;
+    if(!p) return;
+    try{ await store.remove(p.L,p.id); toast("ลบรายการแล้ว"); if(editingId===p.id) resetForm(); await refresh(p.L); }
+    catch(err){ toast("ลบไม่สำเร็จ"); }
+  };
+
+  /* ---------------- export ---------------- */
+  function tableRows(){
+    const rows=filtered();
+    const head=["ประทับเวลา"].concat(cur.fields.map(f=>f.label));
+    return {rows, matrix:[head].concat(rows.map(r=>[fmtTs(r.ts)].concat(cur.fields.map(f=>f.k==="date"?fmtDate(r.date):(r[f.k]==null?"":r[f.k])))))};
+  }
+  $("copyCsv").onclick=async()=>{
+    const {rows,matrix}=tableRows();
+    const clean=v=>String(v==null?"":v).replace(/[\t\r\n]+/g," ");
+    try{ await navigator.clipboard.writeText(matrix.map(r=>r.map(clean).join("\t")).join("\n")); toast("คัดลอก "+rows.length+" รายการ ("+cur.name+") แล้ว"); }
+    catch(e){ toast("คัดลอกไม่สำเร็จ (ต้องเปิดผ่าน https)"); }
+  };
+  $("dlCsv").onclick=()=>{
+    const {rows,matrix}=tableRows();
+    const q=v=>{ const s=String(v==null?"":v); return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+    const csv="﻿"+matrix.map(r=>r.map(q).join(",")).join("\r\n");
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+    a.download="production_"+cur.key+"_"+todayISO()+".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    toast("ดาวน์โหลด "+rows.length+" รายการแล้ว");
+  };
+
+  /* ---------------- load ---------------- */
+  async function refresh(L){
+    data[L.key]=await store.list(L);
+    fillLists(); renderTabs(); if(L===cur) render();
+  }
+  async function refreshAll(){
+    try{
+      await Promise.all(LINES.map(refresh));
+      loaded=true; render();
+      setStatus("ok", store.mode==="sheets" ? "เชื่อม Google Sheets แล้ว · อัปเดต "+fmtTs(Date.now()).slice(11,16) : "เก็บข้อมูลในเครื่องนี้");
+    }catch(err){
+      setStatus("err","เชื่อมต่อ Google Sheets ไม่ได้");
+    }
+  }
+
+  const initial=LINES.find(L=>L.key===location.hash.slice(1));
+  if(initial) cur=initial;
+  buildForm(); renderTabs(); renderHead(); render();
+  refreshAll();
+  if(store.mode==="sheets") setInterval(()=>{ if(!document.hidden && !editingId) refreshAll(); }, REFRESH_SECONDS*1000);
+})();
+</script>
+</body>
+</html>
